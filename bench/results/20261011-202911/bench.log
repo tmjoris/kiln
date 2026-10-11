@@ -1,0 +1,161 @@
+2026/10/11 20:29:27 == exec (firecracker)
+2026/10/11 20:29:37 "true"                 p50   2.31ms p99   3.61ms
+2026/10/11 20:29:42 "python3 -c pass"      p50  23.60ms p99  30.43ms
+2026/10/11 20:29:43 "echo hi > f && cat f" p50   4.62ms p99   7.03ms
+2026/10/11 20:29:43 wrote bench/results/20261011-202911/exec-firecracker.json
+2026/10/11 20:29:43 == startup (firecracker)
+2026/10/11 20:29:58 cold_boot         ttfx p50  255.1ms p99  264.1ms
+2026/10/11 20:30:03 snapshot_restore  ttfx p50   57.9ms p99   63.3ms
+2026/10/11 20:30:07 warm_pool         ttfx p50   30.2ms p99   46.9ms
+2026/10/11 20:30:07 wrote bench/results/20261011-202911/startup-firecracker.json
+2026/10/11 20:30:07 == burst (firecracker)
+2026/10/11 20:30:07 c=1   snapshot_restore     9.6/s  ttfx p50   59.1ms p99   59.1ms  errors 0
+2026/10/11 20:30:08 c=1   cold_boot            3.2/s  ttfx p50  263.7ms p99  263.7ms  errors 0
+2026/10/11 20:30:10 c=4   snapshot_restore    23.8/s  ttfx p50   92.5ms p99   97.0ms  errors 0
+2026/10/11 20:30:11 c=4   cold_boot            7.6/s  ttfx p50  435.2ms p99  444.0ms  errors 0
+2026/10/11 20:30:12 c=8   snapshot_restore    24.9/s  ttfx p50  210.3ms p99  237.4ms  errors 0
+2026/10/11 20:30:14 c=8   cold_boot            7.4/s  ttfx p50  862.9ms p99  998.2ms  errors 0
+2026/10/11 20:30:16 c=16  snapshot_restore    25.1/s  ttfx p50  465.9ms p99  494.4ms  errors 0
+2026/10/11 20:30:20 c=16  cold_boot            6.5/s  ttfx p50 2110.2ms p99 2380.2ms  errors 0
+2026/10/11 20:30:22 c=32  snapshot_restore    25.1/s  ttfx p50  865.4ms p99 1099.2ms  errors 0
+2026/10/11 20:30:28 c=32  cold_boot            6.6/s  ttfx p50 4235.7ms p99 4691.0ms  errors 0
+2026/10/11 20:30:29 wrote bench/results/20261011-202911/burst-firecracker.json
+2026/10/11 20:30:29 == density (firecracker)
+2026/10/11 20:30:31 snapshot_restore n=1   host used   -10.0 MiB (-10.0/sandbox)  ΣPSS     6.2 MiB (6.2/sandbox)
+2026/10/11 20:30:31 snapshot_restore n=5   host used    -7.5 MiB (-1.5/sandbox)  ΣPSS    29.1 MiB (5.8/sandbox)
+2026/10/11 20:30:32 snapshot_restore n=10  host used    -2.3 MiB (-0.2/sandbox)  ΣPSS    57.9 MiB (5.8/sandbox)
+2026/10/11 20:30:32 snapshot_restore n=15  host used    30.1 MiB (2.0/sandbox)  ΣPSS    86.8 MiB (5.8/sandbox)
+2026/10/11 20:30:33 snapshot_restore n=20  host used    55.1 MiB (2.8/sandbox)  ΣPSS   115.7 MiB (5.8/sandbox)
+2026/10/11 20:30:34 snapshot_restore n=25  host used    83.9 MiB (3.4/sandbox)  ΣPSS   144.6 MiB (5.8/sandbox)
+2026/10/11 20:30:34 snapshot_restore n=30  host used   121.9 MiB (4.1/sandbox)  ΣPSS   173.5 MiB (5.8/sandbox)
+2026/10/11 20:30:35 snapshot_restore n=35  host used   163.9 MiB (4.7/sandbox)  ΣPSS   202.4 MiB (5.8/sandbox)
+2026/10/11 20:30:35 snapshot_restore n=40  host used   194.6 MiB (4.9/sandbox)  ΣPSS   231.5 MiB (5.8/sandbox)
+2026/10/11 20:30:36 snapshot_restore n=45  host used   236.1 MiB (5.2/sandbox)  ΣPSS   260.7 MiB (5.8/sandbox)
+2026/10/11 20:30:36 snapshot_restore n=50  host used   259.8 MiB (5.2/sandbox)  ΣPSS   290.1 MiB (5.8/sandbox)
+2026/10/11 20:30:37 snapshot_restore n=55  host used   290.7 MiB (5.3/sandbox)  ΣPSS   319.5 MiB (5.8/sandbox)
+2026/10/11 20:30:37 snapshot_restore n=60  host used   340.5 MiB (5.7/sandbox)  ΣPSS   348.8 MiB (5.8/sandbox)
+2026/10/11 20:30:38 snapshot_restore n=65  host used   445.3 MiB (6.9/sandbox)  ΣPSS   378.4 MiB (5.8/sandbox)
+2026/10/11 20:30:39 snapshot_restore n=70  host used   476.8 MiB (6.8/sandbox)  ΣPSS   407.9 MiB (5.8/sandbox)
+2026/10/11 20:30:40 snapshot_restore n=75  host used   511.2 MiB (6.8/sandbox)  ΣPSS   437.2 MiB (5.8/sandbox)
+2026/10/11 20:30:40 snapshot_restore n=80  host used   532.8 MiB (6.7/sandbox)  ΣPSS   466.5 MiB (5.8/sandbox)
+2026/10/11 20:30:41 snapshot_restore n=85  host used   550.1 MiB (6.5/sandbox)  ΣPSS   495.8 MiB (5.8/sandbox)
+2026/10/11 20:30:41 snapshot_restore n=90  host used   585.3 MiB (6.5/sandbox)  ΣPSS   525.2 MiB (5.8/sandbox)
+2026/10/11 20:30:42 snapshot_restore n=95  host used   620.8 MiB (6.5/sandbox)  ΣPSS   554.4 MiB (5.8/sandbox)
+2026/10/11 20:30:43 snapshot_restore n=100 host used   667.0 MiB (6.7/sandbox)  ΣPSS   583.5 MiB (5.8/sandbox)
+2026/10/11 20:30:43 snapshot_restore stopped: reached 100 sandboxes
+2026/10/11 20:30:45 cold_boot n=1   host used     7.6 MiB (7.6/sandbox)  ΣPSS    66.5 MiB (66.5/sandbox)
+2026/10/11 20:30:47 cold_boot n=5   host used    49.4 MiB (9.9/sandbox)  ΣPSS   332.2 MiB (66.4/sandbox)
+2026/10/11 20:30:48 cold_boot n=10  host used   126.5 MiB (12.6/sandbox)  ΣPSS   664.6 MiB (66.5/sandbox)
+2026/10/11 20:30:50 cold_boot n=15  host used   475.6 MiB (31.7/sandbox)  ΣPSS   997.4 MiB (66.5/sandbox)
+2026/10/11 20:30:51 cold_boot n=20  host used   824.7 MiB (41.2/sandbox)  ΣPSS  1329.9 MiB (66.5/sandbox)
+2026/10/11 20:30:53 cold_boot n=25  host used  1062.3 MiB (42.5/sandbox)  ΣPSS  1662.3 MiB (66.5/sandbox)
+2026/10/11 20:30:54 cold_boot n=30  host used  1248.4 MiB (41.6/sandbox)  ΣPSS  1995.0 MiB (66.5/sandbox)
+2026/10/11 20:30:56 cold_boot n=35  host used  1479.7 MiB (42.3/sandbox)  ΣPSS  2327.5 MiB (66.5/sandbox)
+2026/10/11 20:30:58 cold_boot n=40  host used  1691.0 MiB (42.3/sandbox)  ΣPSS  2660.0 MiB (66.5/sandbox)
+2026/10/11 20:30:59 cold_boot n=45  host used  1983.5 MiB (44.1/sandbox)  ΣPSS  2992.8 MiB (66.5/sandbox)
+2026/10/11 20:31:01 cold_boot n=50  host used  2263.7 MiB (45.3/sandbox)  ΣPSS  3325.3 MiB (66.5/sandbox)
+2026/10/11 20:31:03 cold_boot n=55  host used  2504.5 MiB (45.5/sandbox)  ΣPSS  3657.4 MiB (66.5/sandbox)
+2026/10/11 20:31:04 cold_boot n=60  host used  2793.0 MiB (46.6/sandbox)  ΣPSS  3985.1 MiB (66.4/sandbox)
+2026/10/11 20:31:06 cold_boot n=65  host used  2968.0 MiB (45.7/sandbox)  ΣPSS  4311.1 MiB (66.3/sandbox)
+2026/10/11 20:31:08 cold_boot n=70  host used  3127.9 MiB (44.7/sandbox)  ΣPSS  4644.0 MiB (66.3/sandbox)
+2026/10/11 20:31:10 cold_boot n=75  host used  3353.7 MiB (44.7/sandbox)  ΣPSS  4976.5 MiB (66.4/sandbox)
+2026/10/11 20:31:12 cold_boot n=80  host used  3491.8 MiB (43.6/sandbox)  ΣPSS  5309.1 MiB (66.4/sandbox)
+2026/10/11 20:31:14 cold_boot n=85  host used  3599.0 MiB (42.3/sandbox)  ΣPSS  5641.6 MiB (66.4/sandbox)
+2026/10/11 20:31:14 cold_boot stopped: host MemAvailable below 3072 MiB
+2026/10/11 20:31:15 wrote bench/results/20261011-202911/density-firecracker.json
+2026/10/11 20:31:15 == exec (gvisor)
+2026/10/11 20:31:26 "true"                 p50   5.15ms p99  12.90ms
+2026/10/11 20:31:39 "python3 -c pass"      p50  63.76ms p99  88.72ms
+2026/10/11 20:31:42 "echo hi > f && cat f" p50  13.05ms p99  21.04ms
+2026/10/11 20:31:42 wrote bench/results/20261011-202911/exec-gvisor.json
+2026/10/11 20:31:42 == startup (gvisor)
+2026/10/11 20:31:56 cold_boot         ttfx p50  191.2ms p99  267.4ms
+2026/10/11 20:31:57 snapshot_restore sample 0: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:31:57 snapshot_restore sample 1: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:31:57 snapshot_restore sample 2: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:31:58 snapshot_restore sample 3: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:31:58 snapshot_restore sample 4: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:31:58 snapshot_restore sample 5: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:31:58 snapshot_restore sample 6: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:31:59 snapshot_restore sample 7: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:31:59 snapshot_restore sample 8: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:31:59 snapshot_restore sample 9: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:00 snapshot_restore sample 10: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:00 snapshot_restore sample 11: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:00 snapshot_restore sample 12: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:00 snapshot_restore sample 13: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:01 snapshot_restore sample 14: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:01 snapshot_restore sample 15: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:01 snapshot_restore sample 16: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:01 snapshot_restore sample 17: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:02 snapshot_restore sample 18: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:02 snapshot_restore sample 19: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:02 snapshot_restore sample 20: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:03 snapshot_restore sample 21: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:03 snapshot_restore sample 22: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:03 snapshot_restore sample 23: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:04 snapshot_restore sample 24: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:04 snapshot_restore sample 25: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:04 snapshot_restore sample 26: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:05 snapshot_restore sample 27: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:05 snapshot_restore sample 28: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:05 snapshot_restore sample 29: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:06 snapshot_restore sample 30: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:06 snapshot_restore sample 31: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:06 snapshot_restore sample 32: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:06 snapshot_restore sample 33: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:07 snapshot_restore sample 34: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:07 snapshot_restore sample 35: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:07 snapshot_restore sample 36: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:08 snapshot_restore sample 37: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:08 snapshot_restore sample 38: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:08 snapshot_restore sample 39: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:09 snapshot_restore sample 40: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:09 snapshot_restore sample 41: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:09 snapshot_restore sample 42: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:10 snapshot_restore sample 43: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:10 snapshot_restore sample 44: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:10 snapshot_restore sample 45: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:10 snapshot_restore sample 46: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:11 snapshot_restore sample 47: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:11 snapshot_restore sample 48: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:11 snapshot_restore sample 49: got mode cold_boot (pool empty or no snapshot?)
+2026/10/11 20:32:11 snapshot_restore  ttfx p50  193.1ms p99  244.6ms
+2026/10/11 20:32:24 warm_pool         ttfx p50  108.4ms p99  142.3ms
+2026/10/11 20:32:24 wrote bench/results/20261011-202911/startup-gvisor.json
+2026/10/11 20:32:24 == burst (gvisor)
+2026/10/11 20:32:25 c=1   snapshot_restore     2.9/s  ttfx p50  238.8ms p99  238.8ms  errors 0
+2026/10/11 20:32:26 c=1   cold_boot            3.4/s  ttfx p50  200.3ms p99  200.3ms  errors 0
+2026/10/11 20:32:28 c=4   snapshot_restore     5.3/s  ttfx p50  521.5ms p99  554.3ms  errors 0
+2026/10/11 20:32:29 c=4   cold_boot            4.5/s  ttfx p50  632.8ms p99  663.4ms  errors 0
+2026/10/11 20:32:32 c=8   snapshot_restore     5.3/s  ttfx p50 1149.2ms p99 1293.1ms  errors 0
+2026/10/11 20:32:34 c=8   cold_boot            5.3/s  ttfx p50 1002.8ms p99 1123.3ms  errors 0
+2026/10/11 20:32:39 c=16  snapshot_restore     5.1/s  ttfx p50 2320.3ms p99 2643.4ms  errors 0
+2026/10/11 20:32:43 c=16  cold_boot            5.1/s  ttfx p50 2254.6ms p99 2484.3ms  errors 0
+2026/10/11 20:32:51 c=32  snapshot_restore     4.6/s  ttfx p50 4666.7ms p99 6262.2ms  errors 0
+2026/10/11 20:32:58 c=32  cold_boot            4.7/s  ttfx p50 5081.8ms p99 6186.5ms  errors 0
+2026/10/11 20:32:59 wrote bench/results/20261011-202911/burst-gvisor.json
+2026/10/11 20:32:59 == density (gvisor)
+2026/10/11 20:33:02 cold_boot n=1   host used   -34.4 MiB (-34.4/sandbox)  ΣPSS     3.8 MiB (3.8/sandbox)
+2026/10/11 20:33:03 cold_boot n=5   host used   -57.1 MiB (-11.4/sandbox)  ΣPSS    16.3 MiB (3.3/sandbox)
+2026/10/11 20:33:04 cold_boot n=10  host used   -18.1 MiB (-1.8/sandbox)  ΣPSS    32.4 MiB (3.2/sandbox)
+2026/10/11 20:33:05 cold_boot n=15  host used    44.8 MiB (3.0/sandbox)  ΣPSS    48.3 MiB (3.2/sandbox)
+2026/10/11 20:33:07 cold_boot n=20  host used   124.5 MiB (6.2/sandbox)  ΣPSS    64.3 MiB (3.2/sandbox)
+2026/10/11 20:33:08 cold_boot n=25  host used   297.2 MiB (11.9/sandbox)  ΣPSS    80.7 MiB (3.2/sandbox)
+2026/10/11 20:33:10 cold_boot n=30  host used   353.1 MiB (11.8/sandbox)  ΣPSS    96.6 MiB (3.2/sandbox)
+2026/10/11 20:33:11 cold_boot n=35  host used   441.0 MiB (12.6/sandbox)  ΣPSS   111.9 MiB (3.2/sandbox)
+2026/10/11 20:33:12 cold_boot n=40  host used   538.0 MiB (13.4/sandbox)  ΣPSS   128.6 MiB (3.2/sandbox)
+2026/10/11 20:33:13 cold_boot n=45  host used   622.3 MiB (13.8/sandbox)  ΣPSS   144.7 MiB (3.2/sandbox)
+2026/10/11 20:33:14 cold_boot n=50  host used   709.0 MiB (14.2/sandbox)  ΣPSS   160.7 MiB (3.2/sandbox)
+2026/10/11 20:33:16 cold_boot n=55  host used   799.6 MiB (14.5/sandbox)  ΣPSS   176.7 MiB (3.2/sandbox)
+2026/10/11 20:33:17 cold_boot n=60  host used   889.0 MiB (14.8/sandbox)  ΣPSS   192.3 MiB (3.2/sandbox)
+2026/10/11 20:33:18 cold_boot n=65  host used   970.0 MiB (14.9/sandbox)  ΣPSS   208.0 MiB (3.2/sandbox)
+2026/10/11 20:33:19 cold_boot n=70  host used  1055.8 MiB (15.1/sandbox)  ΣPSS   224.6 MiB (3.2/sandbox)
+2026/10/11 20:33:21 cold_boot n=75  host used  1151.0 MiB (15.3/sandbox)  ΣPSS   240.5 MiB (3.2/sandbox)
+2026/10/11 20:33:22 cold_boot n=80  host used  1239.5 MiB (15.5/sandbox)  ΣPSS   256.4 MiB (3.2/sandbox)
+2026/10/11 20:33:23 cold_boot n=85  host used  1336.5 MiB (15.7/sandbox)  ΣPSS   272.6 MiB (3.2/sandbox)
+2026/10/11 20:33:24 cold_boot n=90  host used  1422.6 MiB (15.8/sandbox)  ΣPSS   288.8 MiB (3.2/sandbox)
+2026/10/11 20:33:26 cold_boot n=95  host used  1512.1 MiB (15.9/sandbox)  ΣPSS   304.4 MiB (3.2/sandbox)
+2026/10/11 20:33:27 cold_boot n=100 host used  1604.9 MiB (16.0/sandbox)  ΣPSS   320.8 MiB (3.2/sandbox)
+2026/10/11 20:33:27 cold_boot stopped: reached 100 sandboxes
+2026/10/11 20:33:28 wrote bench/results/20261011-202911/density-gvisor.json

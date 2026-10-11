@@ -1,0 +1,2 @@
+time=2026-10-11T20:29:12.039Z level=INFO msg="kilnd listening" addr=[::]:7070 backends=firecracker,gvisor pools="firecracker/python=4,gvisor/python=4"
+time=2026-10-11T20:33:28.874Z level=INFO msg="shutting down"

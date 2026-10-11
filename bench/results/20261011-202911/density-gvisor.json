@@ -1,0 +1,187 @@
+{
+  "backend": "gvisor",
+  "experiment": "density",
+  "host": {
+    "cpu_model": "Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz",
+    "cpus": 4,
+    "kernel": "7.0.0-38-generic",
+    "mem_total_mib": 15868.9765625
+  },
+  "results": [
+    {
+      "mode": "cold_boot",
+      "points": [
+        {
+          "n": 1,
+          "host_mem_used_mib": -34.44921875,
+          "sum_pss_mib": 3.8330078125,
+          "sum_rss_mib": 24.43359375,
+          "create_ms": 85.136,
+          "first_exec_ms": 118.905
+        },
+        {
+          "n": 5,
+          "host_mem_used_mib": -57.1015625,
+          "sum_pss_mib": 16.2861328125,
+          "sum_rss_mib": 118.0234375,
+          "create_ms": 96.721,
+          "first_exec_ms": 115.919
+        },
+        {
+          "n": 10,
+          "host_mem_used_mib": -18.09375,
+          "sum_pss_mib": 32.369140625,
+          "sum_rss_mib": 235.79296875,
+          "create_ms": 109.902,
+          "first_exec_ms": 113.346
+        },
+        {
+          "n": 15,
+          "host_mem_used_mib": 44.828125,
+          "sum_pss_mib": 48.2666015625,
+          "sum_rss_mib": 353.1875,
+          "create_ms": 87.755,
+          "first_exec_ms": 101.878
+        },
+        {
+          "n": 20,
+          "host_mem_used_mib": 124.51171875,
+          "sum_pss_mib": 64.3134765625,
+          "sum_rss_mib": 471.22265625,
+          "create_ms": 97.979,
+          "first_exec_ms": 128.939
+        },
+        {
+          "n": 25,
+          "host_mem_used_mib": 297.21875,
+          "sum_pss_mib": 80.736328125,
+          "sum_rss_mib": 590.0625,
+          "create_ms": 84.469,
+          "first_exec_ms": 110.091
+        },
+        {
+          "n": 30,
+          "host_mem_used_mib": 353.06640625,
+          "sum_pss_mib": 96.58203125,
+          "sum_rss_mib": 708.20703125,
+          "create_ms": 80.1,
+          "first_exec_ms": 100.393
+        },
+        {
+          "n": 35,
+          "host_mem_used_mib": 441.01171875,
+          "sum_pss_mib": 111.8828125,
+          "sum_rss_mib": 826.43359375,
+          "create_ms": 83.841,
+          "first_exec_ms": 116.631
+        },
+        {
+          "n": 40,
+          "host_mem_used_mib": 537.9921875,
+          "sum_pss_mib": 128.59765625,
+          "sum_rss_mib": 945.67578125,
+          "create_ms": 87.328,
+          "first_exec_ms": 105.433
+        },
+        {
+          "n": 45,
+          "host_mem_used_mib": 622.328125,
+          "sum_pss_mib": 144.7119140625,
+          "sum_rss_mib": 1063.79296875,
+          "create_ms": 98.669,
+          "first_exec_ms": 105.556
+        },
+        {
+          "n": 50,
+          "host_mem_used_mib": 708.953125,
+          "sum_pss_mib": 160.6826171875,
+          "sum_rss_mib": 1182.6640625,
+          "create_ms": 79.546,
+          "first_exec_ms": 104.842
+        },
+        {
+          "n": 55,
+          "host_mem_used_mib": 799.62890625,
+          "sum_pss_mib": 176.685546875,
+          "sum_rss_mib": 1301.58984375,
+          "create_ms": 85.397,
+          "first_exec_ms": 102.522
+        },
+        {
+          "n": 60,
+          "host_mem_used_mib": 888.96875,
+          "sum_pss_mib": 192.322265625,
+          "sum_rss_mib": 1419.52734375,
+          "create_ms": 81.084,
+          "first_exec_ms": 106.931
+        },
+        {
+          "n": 65,
+          "host_mem_used_mib": 969.98828125,
+          "sum_pss_mib": 208.015625,
+          "sum_rss_mib": 1538.12890625,
+          "create_ms": 90.157,
+          "first_exec_ms": 109.064
+        },
+        {
+          "n": 70,
+          "host_mem_used_mib": 1055.8125,
+          "sum_pss_mib": 224.5810546875,
+          "sum_rss_mib": 1658.30078125,
+          "create_ms": 91.22,
+          "first_exec_ms": 108.123
+        },
+        {
+          "n": 75,
+          "host_mem_used_mib": 1151.00390625,
+          "sum_pss_mib": 240.4951171875,
+          "sum_rss_mib": 1776.19921875,
+          "create_ms": 102.84,
+          "first_exec_ms": 107.744
+        },
+        {
+          "n": 80,
+          "host_mem_used_mib": 1239.54296875,
+          "sum_pss_mib": 256.4453125,
+          "sum_rss_mib": 1894.0703125,
+          "create_ms": 94.436,
+          "first_exec_ms": 103.965
+        },
+        {
+          "n": 85,
+          "host_mem_used_mib": 1336.45703125,
+          "sum_pss_mib": 272.5703125,
+          "sum_rss_mib": 2012.9921875,
+          "create_ms": 84.185,
+          "first_exec_ms": 104.083
+        },
+        {
+          "n": 90,
+          "host_mem_used_mib": 1422.58203125,
+          "sum_pss_mib": 288.810546875,
+          "sum_rss_mib": 2132.52734375,
+          "create_ms": 85.846,
+          "first_exec_ms": 100.516
+        },
+        {
+          "n": 95,
+          "host_mem_used_mib": 1512.12109375,
+          "sum_pss_mib": 304.4482421875,
+          "sum_rss_mib": 2251.76953125,
+          "create_ms": 96.617,
+          "first_exec_ms": 108.025
+        },
+        {
+          "n": 100,
+          "host_mem_used_mib": 1604.875,
+          "sum_pss_mib": 320.814453125,
+          "sum_rss_mib": 2369.81640625,
+          "create_ms": 84.941,
+          "first_exec_ms": 102.417
+        }
+      ],
+      "stop_reason": "reached 100 sandboxes"
+    }
+  ],
+  "time": "2026-10-11T20:32:59.899611813Z"
+}
