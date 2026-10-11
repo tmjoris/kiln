@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"sync"
+	"time"
 
 	kilnv1 "github.com/tmjoris/kiln/gen/kiln/v1"
 	"github.com/tmjoris/kiln/internal/guest"
@@ -109,9 +110,16 @@ func (g *GVisor) Prepare(ctx context.Context, s Spec) error {
 	return e.err
 }
 
-func (g *GVisor) runsc(ctx context.Context, args ...string) ([]byte, error) {
+func (g *GVisor) command(ctx context.Context, args ...string) *exec.Cmd {
 	base := []string{"--root", filepath.Join(g.cfg.DataDir, "gvisor", "state")}
 	cmd := exec.CommandContext(ctx, g.cfg.Runsc, append(base, args...)...)
+	// Detached sandboxes inherit our fds; never wait on them for EOF.
+	cmd.WaitDelay = time.Second
+	return cmd
+}
+
+func (g *GVisor) runsc(ctx context.Context, args ...string) ([]byte, error) {
+	cmd := g.command(ctx, args...)
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	out, err := cmd.Output()
@@ -146,9 +154,20 @@ func (g *GVisor) Start(ctx context.Context, id string, s Spec, _ bool) (Instance
 		args = append(args, "--ignore-cgroups")
 	}
 	args = append(args, "run", "--detach", "--bundle", bundle, id)
-	if _, err := g.runsc(ctx, args...); err != nil {
-		os.RemoveAll(bundle)
+	// The sandbox outlives this command and keeps its stdio, so point it at
+	// a file rather than a pipe we would wait on.
+	logf, err := os.Create(filepath.Join(bundle, "runsc.log"))
+	if err != nil {
 		return nil, 0, err
+	}
+	cmd := g.command(ctx, args...)
+	cmd.Stdout, cmd.Stderr = logf, logf
+	err = cmd.Run()
+	logf.Close()
+	if err != nil {
+		msg, _ := os.ReadFile(filepath.Join(bundle, "runsc.log"))
+		os.RemoveAll(bundle)
+		return nil, 0, fmt.Errorf("runsc run: %v: %s", err, bytes.TrimSpace(msg))
 	}
 	inst := &gvInstance{g: g, id: id, bundle: bundle}
 	sock := filepath.Join(sockDir, "agent.sock")
