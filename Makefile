@@ -6,9 +6,13 @@ BIN     := bin
 GOFLAGS := -trimpath
 LDFLAGS := -s -w
 
-.PHONY: all proto build agent image host-image test fmt vet bench clean tf-validate
+.PHONY: all tools proto build agent image test fmt vet clean tf-validate
 
 all: build
+
+# Pinned Firecracker, gVisor, protoc and Terraform into .tools/.
+tools:
+	./scripts/fetch-tools.sh
 
 $(GOBIN)/protoc-gen-go:
 	GOBIN=$(GOBIN) go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.6
@@ -31,10 +35,6 @@ agent:
 # Root filesystem + kernel for guests (no root required).
 image: agent
 	./images/build.sh
-
-# Container that plays the role of a production host: root, /dev/kvm, runsc.
-host-image: build
-	./images/build-host.sh
 
 test:
 	go test ./...
