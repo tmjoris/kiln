@@ -1,0 +1,9 @@
+.tools/
+/bin/
+/build/
+*.ext4
+*.tar
+.terraform/
+*.tfstate*
+__pycache__/
+.venv/

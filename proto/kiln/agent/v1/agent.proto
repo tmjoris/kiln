@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package kiln.agent.v1;
+
+import "kiln/v1/kiln.proto";
+
+option go_package = "github.com/tmjoris/kiln/gen/kiln/agent/v1;agentv1";
+
+// Agent is served by kiln-agent inside each sandbox. For Firecracker it runs
+// as PID 1 and listens on vsock; the host is the only peer that can reach it.
+service Agent {
+  rpc Ping(PingRequest) returns (PingResponse);
+
+  // Init personalises a guest after it is handed out. Snapshot clones share
+  // memory, so every clone wakes up with the same clock and RNG state as the
+  // template; Init fixes both before any user code runs.
+  rpc Init(InitRequest) returns (InitResponse);
+
+  rpc Exec(ExecRequest) returns (stream kiln.v1.ExecEvent);
+  rpc WriteFile(WriteFileRequest) returns (WriteFileResponse);
+  rpc ReadFile(ReadFileRequest) returns (ReadFileResponse);
+}
+
+message PingRequest {}
+
+message PingResponse {
+  uint64 boot_id = 1;  // random per process start; changes only on reboot
+}
+
+message InitRequest {
+  int64 unix_nanos = 1;
+  bytes entropy = 2;
+  string hostname = 3;
+}
+
+message InitResponse {}
+
+message ExecRequest {
+  repeated string argv = 1;
+  bytes stdin = 2;
+  map<string, string> env = 3;
+  string cwd = 4;
+  int64 timeout_ms = 5;
+  uint64 max_output_bytes = 6;
+}
+
+message WriteFileRequest {
+  string path = 1;
+  bytes content = 2;
+  uint32 mode = 3;
+}
+
+message WriteFileResponse {}
+
+message ReadFileRequest {
+  string path = 1;
+  uint64 max_bytes = 2;
+}
+
+message ReadFileResponse {
+  bytes content = 1;
+}

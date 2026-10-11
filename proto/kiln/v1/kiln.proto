@@ -1,0 +1,182 @@
+syntax = "proto3";
+
+package kiln.v1;
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/tmjoris/kiln/gen/kiln/v1;kilnv1";
+
+// Kiln hands out isolated, stateful Linux workspaces for agents.
+//
+// A sandbox lives across many Exec calls (an agent's "terminal"), keeps its
+// filesystem between calls, and is destroyed explicitly or by idle timeout.
+service Kiln {
+  rpc CreateSandbox(CreateSandboxRequest) returns (Sandbox);
+  rpc GetSandbox(GetSandboxRequest) returns (Sandbox);
+  rpc ListSandboxes(ListSandboxesRequest) returns (ListSandboxesResponse);
+  rpc DeleteSandbox(DeleteSandboxRequest) returns (DeleteSandboxResponse);
+
+  // Exec runs a process inside the sandbox and streams its output. The last
+  // event on the stream is always an ExitStatus.
+  rpc Exec(ExecRequest) returns (stream ExecEvent);
+
+  rpc WriteFile(WriteFileRequest) returns (WriteFileResponse);
+  rpc ReadFile(ReadFileRequest) returns (ReadFileResponse);
+
+  // Run is create + exec + delete in one call, for stateless tool use.
+  rpc Run(RunRequest) returns (RunResponse);
+
+  // Stats reports pool and host capacity, used by schedulers and benchmarks.
+  rpc Stats(StatsRequest) returns (StatsResponse);
+}
+
+enum Backend {
+  BACKEND_UNSPECIFIED = 0;  // server default
+  BACKEND_FIRECRACKER = 1;  // KVM microVM, own guest kernel
+  BACKEND_GVISOR = 2;       // user-space kernel (runsc)
+}
+
+enum StartMode {
+  START_MODE_UNSPECIFIED = 0;
+  START_MODE_COLD_BOOT = 1;         // kernel boot from scratch
+  START_MODE_SNAPSHOT_RESTORE = 2;  // restored from a memory snapshot on demand
+  START_MODE_WARM_POOL = 3;         // handed out from a pre-started pool
+}
+
+enum SandboxState {
+  SANDBOX_STATE_UNSPECIFIED = 0;
+  SANDBOX_STATE_READY = 1;
+  SANDBOX_STATE_TERMINATED = 2;
+}
+
+message Resources {
+  uint32 vcpus = 1;
+  uint32 memory_mib = 2;
+}
+
+message CreateSandboxRequest {
+  Backend backend = 1;
+  // Template names a root filesystem image (e.g. "python"). Empty = default.
+  string template = 2;
+  // Zero values take the template defaults. Non-default shapes cannot use the
+  // template snapshot and fall back to a cold boot.
+  Resources resources = 3;
+  // Destroy the sandbox after this long without an API call. Zero = default.
+  google.protobuf.Duration idle_timeout = 4;
+  map<string, string> labels = 5;
+  // Bypass the warm pool and snapshot; forces START_MODE_COLD_BOOT. Used by
+  // benchmarks to measure the slow path.
+  bool force_cold_boot = 6;
+  // Bypass the warm pool but still restore from snapshot if one exists.
+  bool skip_pool = 7;
+}
+
+message StartupInfo {
+  StartMode mode = 1;
+  // From request arrival until the in-guest agent answered a ping.
+  google.protobuf.Duration ready_latency = 2;
+}
+
+message Sandbox {
+  string id = 1;
+  Backend backend = 2;
+  string template = 3;
+  Resources resources = 4;
+  SandboxState state = 5;
+  google.protobuf.Timestamp created_at = 6;
+  StartupInfo startup = 7;
+  map<string, string> labels = 8;
+}
+
+message GetSandboxRequest {
+  string id = 1;
+}
+
+message ListSandboxesRequest {}
+
+message ListSandboxesResponse {
+  repeated Sandbox sandboxes = 1;
+}
+
+message DeleteSandboxRequest {
+  string id = 1;
+}
+
+message DeleteSandboxResponse {}
+
+message ExecRequest {
+  string sandbox_id = 1;
+  // argv[0] is resolved via PATH. Use ["sh", "-c", "..."] for shell syntax.
+  repeated string argv = 2;
+  bytes stdin = 3;
+  map<string, string> env = 4;
+  string cwd = 5;  // default /workspace
+  google.protobuf.Duration timeout = 6;
+  // Per-stream cap; output past it is dropped and output_truncated is set.
+  uint64 max_output_bytes = 7;
+}
+
+message ExitStatus {
+  int32 code = 1;  // -1 if killed by a signal
+  string signal = 2;
+  bool timed_out = 3;
+  bool output_truncated = 4;
+  google.protobuf.Duration duration = 5;
+}
+
+message ExecEvent {
+  oneof event {
+    bytes stdout = 1;
+    bytes stderr = 2;
+    ExitStatus exit = 3;
+  }
+}
+
+message WriteFileRequest {
+  string sandbox_id = 1;
+  string path = 2;
+  bytes content = 3;
+  uint32 mode = 4;  // default 0644
+}
+
+message WriteFileResponse {}
+
+message ReadFileRequest {
+  string sandbox_id = 1;
+  string path = 2;
+}
+
+message ReadFileResponse {
+  bytes content = 1;
+}
+
+message RunRequest {
+  CreateSandboxRequest sandbox = 1;
+  ExecRequest exec = 2;  // sandbox_id is ignored
+  // Files written before exec, keyed by absolute path.
+  map<string, bytes> files = 3;
+}
+
+message RunResponse {
+  bytes stdout = 1;
+  bytes stderr = 2;
+  ExitStatus exit = 3;
+  StartupInfo startup = 4;
+}
+
+message StatsRequest {}
+
+message PoolStats {
+  string key = 1;  // backend/template/shape
+  uint32 ready = 2;
+  uint32 target = 3;
+  uint32 starting = 4;
+}
+
+message StatsResponse {
+  uint32 active_sandboxes = 1;
+  repeated PoolStats pools = 2;
+  uint64 host_mem_available_bytes = 3;
+  uint64 host_mem_total_bytes = 4;
+}
