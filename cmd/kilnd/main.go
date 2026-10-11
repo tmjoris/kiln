@@ -45,6 +45,7 @@ func main() {
 		memMiB       = flag.Uint("mem-mib", 512, "default memory per sandbox (MiB)")
 		pools        = flag.String("pools", "", "warm pools, e.g. firecracker/python=8,gvisor/python=4")
 		warmup       = flag.String("warmup", "python3 -c 'import json,os,re,subprocess,sys'", "shell command run in Firecracker templates before snapshotting")
+		poolWarmup   = flag.String("pool-warmup", "python3 -c pass", "shell command run in each pooled guest before parking (empty to skip)")
 		idle         = flag.Duration("idle-timeout", 30*time.Minute, "destroy sandboxes idle this long")
 		maxSandboxes = flag.Int("max-sandboxes", 0, "admission limit on live guests (0 = none)")
 		minAvailMiB  = flag.Uint64("min-mem-available-mib", 1024, "refuse new guests below this host MemAvailable")
@@ -57,13 +58,9 @@ func main() {
 	for _, name := range strings.Split(*backends, ",") {
 		switch strings.TrimSpace(name) {
 		case "firecracker":
-			var wu []string
-			if *warmup != "" {
-				wu = []string{"sh", "-c", *warmup}
-			}
 			b, err := sandbox.NewFirecracker(sandbox.FirecrackerConfig{
 				Binary: lookPath(*fcBin), Kernel: *kernel, ImagesDir: *imagesDir,
-				DataDir: *dataDir + "/firecracker", Default: def, Warmup: wu,
+				DataDir: *dataDir + "/firecracker", Default: def, Warmup: shellArgv(*warmup),
 			})
 			must(err)
 			bs = append(bs, b)
@@ -86,6 +83,7 @@ func main() {
 	m, err := sandbox.NewManager(sandbox.Config{
 		Backends: bs, DefaultBackend: db, Pools: poolCfg, IdleTimeout: *idle,
 		MaxSandboxes: *maxSandboxes, MinMemAvailable: *minAvailMiB << 20,
+		PoolWarmup: shellArgv(*poolWarmup),
 	})
 	must(err)
 
@@ -122,6 +120,13 @@ func main() {
 	if err != nil {
 		must(err)
 	}
+}
+
+func shellArgv(cmd string) []string {
+	if cmd == "" {
+		return nil
+	}
+	return []string{"sh", "-c", cmd}
 }
 
 func parsePools(s string) (map[string]int, error) {

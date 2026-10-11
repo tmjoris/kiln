@@ -110,6 +110,11 @@ func (p *pool) fill(ctx context.Context) {
 			ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 			defer cancel()
 			inst, mode, err := p.backend.Start(ctx, id, p.spec, false)
+			if err == nil && len(p.m.cfg.PoolWarmup) > 0 {
+				if err = drainExec(ctx, inst.Guest(), p.m.cfg.PoolWarmup); err != nil {
+					inst.Destroy()
+				}
+			}
 			if err != nil {
 				slog.Warn("pool start failed", "pool", p.key(), "err", err)
 				p.m.release()

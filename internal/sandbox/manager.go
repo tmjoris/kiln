@@ -37,6 +37,10 @@ type Config struct {
 	MinMemAvailable uint64
 	// MaxConcurrentStarts bounds pool refills (on-demand creates bypass it).
 	MaxConcurrentStarts int
+	// PoolWarmup runs in each pooled guest before it is parked, so the
+	// first-touch cost (page faults into snapshot memory, cold file caches)
+	// is paid off the request path.
+	PoolWarmup []string
 }
 
 type Sandbox struct {
