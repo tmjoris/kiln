@@ -10,6 +10,8 @@ import (
 	"io"
 	"net"
 	"net/http"
+
+	"github.com/tmjoris/kiln/internal/vsock"
 )
 
 type apiClient struct{ hc *http.Client }
@@ -17,8 +19,7 @@ type apiClient struct{ hc *http.Client }
 func newAPIClient(sock string) *apiClient {
 	return &apiClient{hc: &http.Client{Transport: &http.Transport{
 		DialContext: func(ctx context.Context, _, _ string) (net.Conn, error) {
-			var d net.Dialer
-			return d.DialContext(ctx, "unix", sock)
+			return vsock.DialUnix(ctx, sock)
 		},
 		DisableCompression: true,
 	}}}

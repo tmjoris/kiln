@@ -57,8 +57,8 @@ func Listen(port uint32) (net.Listener, error) {
 
 func (l *listener) Accept() (net.Conn, error) {
 	var (
-		nfd int
-		sa  unix.Sockaddr
+		nfd  int
+		sa   unix.Sockaddr
 		aerr error
 	)
 	err := l.rc.Read(func(fd uintptr) bool {
@@ -96,8 +96,7 @@ var ErrNotListening = errors.New("vsock: guest port not listening")
 // DialFirecracker connects to a guest vsock port through the Unix socket
 // Firecracker creates for the VM's vsock device.
 func DialFirecracker(ctx context.Context, udsPath string, port uint32) (net.Conn, error) {
-	var d net.Dialer
-	c, err := d.DialContext(ctx, "unix", udsPath)
+	c, err := DialUnix(ctx, udsPath)
 	if err != nil {
 		return nil, err
 	}
