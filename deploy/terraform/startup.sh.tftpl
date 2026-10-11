@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# Kiln host bootstrap (rendered by Terraform). Idempotent: re-runs on reboot.
+set -euxo pipefail
+
+[ -e /dev/kvm ] || { echo "no /dev/kvm: nested virtualization disabled?" >&2; exit 1; }
+
+install -d /opt/kiln/bin /opt/kiln/images/python /opt/kiln/kernel /var/lib/kiln
+cd /tmp
+
+# Firecracker, pinned and verified.
+curl -fsSL -o fc.tgz \
+  "https://github.com/firecracker-microvm/firecracker/releases/download/${firecracker_version}/firecracker-${firecracker_version}-x86_64.tgz"
+echo "${firecracker_sha256}  fc.tgz" | sha256sum -c -
+tar xzf fc.tgz
+install -m 0755 "release-${firecracker_version}-x86_64/firecracker-${firecracker_version}-x86_64" /opt/kiln/bin/firecracker
+install -m 0755 "release-${firecracker_version}-x86_64/jailer-${firecracker_version}-x86_64" /opt/kiln/bin/jailer
+
+# gVisor, pinned and verified. runsc expects its sidecars next to it.
+curl -fsSL -o gvisor.tar.bz2 \
+  "https://github.com/google/gvisor/releases/download/release-${gvisor_release}/gvisor-x86_64.tar.bz2"
+echo "${gvisor_sha256}  gvisor.tar.bz2" | sha256sum -c -
+rm -rf /opt/kiln/gvisor && mkdir -p /opt/kiln/gvisor && tar xjf gvisor.tar.bz2 -C /opt/kiln/gvisor
+
+# Kiln artifacts from the private bucket (content-addressed names).
+fetch() { gcloud storage cp "gs://${bucket}/$1" "$2"; }
+fetch "${objects["kilnd"]}" /opt/kiln/bin/kilnd
+fetch "${objects["kiln"]}" /opt/kiln/bin/kiln
+fetch "${objects["vmlinux"]}" /opt/kiln/kernel/vmlinux
+fetch "${objects["rootfs.ext4"]}" /opt/kiln/images/python/rootfs.ext4
+fetch "${objects["rootfs.tar"]}" /opt/kiln/images/python/rootfs.tar
+chmod 0755 /opt/kiln/bin/kilnd /opt/kiln/bin/kiln
+
+# Host tuning for many small VMs: lots of fds, maps and vsock sockets, and
+# KSM to merge identical guest pages that snapshot sharing does not cover.
+cat > /etc/sysctl.d/90-kiln.conf <<'EOF'
+fs.file-max = 4194304
+fs.inotify.max_user_instances = 8192
+vm.max_map_count = 1048576
+kernel.pid_max = 4194304
+EOF
+sysctl --system
+echo 1 > /sys/kernel/mm/ksm/run || true
+
+cat > /etc/systemd/system/kilnd.service <<'EOF'
+[Unit]
+Description=Kiln sandbox host daemon
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/opt/kiln/bin/kilnd -listen :7070 -metrics :9090 \
+  -data-dir /var/lib/kiln -images /opt/kiln/images -kernel /opt/kiln/kernel/vmlinux \
+  -firecracker /opt/kiln/bin/firecracker -runsc /opt/kiln/gvisor/runsc \
+  ${kilnd_flags}
+Restart=always
+RestartSec=2
+LimitNOFILE=1048576
+LimitNPROC=infinity
+TasksMax=infinity
+# Guests die with the daemon (Pdeathsig); start from a clean slate.
+ExecStartPre=/bin/rm -rf /var/lib/kiln/firecracker/vms /var/lib/kiln/gvisor/bundles
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl daemon-reload
+systemctl enable --now kilnd
+systemctl restart kilnd

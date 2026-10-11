@@ -1,0 +1,5 @@
+project_id   = "my-gcp-project"
+region       = "us-central1"
+host_count   = 2
+machine_type = "n2-standard-8"
+client_cidrs = ["10.0.0.0/8"]
