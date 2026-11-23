@@ -47,7 +47,7 @@ export default {
 		const url = new URL(request.url);
 		if (url.pathname === "/healthz") return json(200, { ok: true, edge: true });
 		if (!ROUTES.test(url.pathname)) return json(404, { detail: "not found" });
-		if (!["GET", "POST", "DELETE"].includes(request.method)) return json(405, { detail: "method not allowed" });
+		if (!["GET", "POST", "PUT", "DELETE"].includes(request.method)) return json(405, { detail: "method not allowed" });
 		if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY_BYTES) {
 			return json(413, { detail: "request body too large" });
 		}
@@ -65,7 +65,7 @@ export default {
 		const upstream = await fetch(env.ORIGIN_URL.replace(/\/$/, "") + url.pathname + url.search, {
 			method: request.method,
 			headers,
-			body: request.method === "GET" ? undefined : request.body,
+			body: request.method === "GET" || request.method === "DELETE" ? undefined : request.body,
 		});
 		const originMs = Date.now() - originStart;
 
