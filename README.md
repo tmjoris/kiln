@@ -177,6 +177,45 @@ Sandboxes were started one at a time and kept alive, each having run the probe o
 
 Restored clones cost a sixth of a cold-booted VM by MemAvailable and an eleventh by PSS, because they share the snapshot's clean pages. MemAvailable is the only measure applied to all three paths. Summed PSS misses gVisor's guest memory file, so it is shown for Firecracker only. The laptop was running a desktop session, so MemAvailable readings below about 15 sandboxes are noise; the totals above are the stable figures.
 
+## Cloudflare front door (free plan)
+
+`edge/` puts a Cloudflare Worker in front of the gateway, so clients reach Kiln at a public URL while the host
+accepts no inbound connections. It runs on the Workers free plan.
+
+```
+client ── API key ──▶ Worker (kiln-edge.<you>.workers.dev) ── secret header ──▶ Cloudflare Tunnel ──▶ gateway ──▶ kilnd
+```
+
+- **The Worker** checks the client's API key against SHA-256 hashes in a constant-time compare, passes only Kiln's
+  routes and methods, caps request bodies at 1 MiB, and adds `Server-Timing` for its own work and the origin hop.
+  Server-sent events from `exec` stream straight through.
+- **The tunnel** (`cloudflared`) makes an outbound connection from the host, so there is no open port to find.
+- **The gateway** refuses every request without the Worker's secret header when `KILN_EDGE_SECRET` is set, so the
+  tunnel URL alone is useless. Clients never see that secret, and the origin never sees client keys.
+
+Measured from the same 2015 laptop on a home connection in Nairobi, 30 runs of `python3 -c 'print(6*7)'` in one
+Firecracker sandbox ([results](bench/results)):
+
+| Path | p50 | p95 |
+| --- | --- | --- |
+| Client to gateway directly | 135 ms | 244 ms |
+| Client to Worker, tunnel, gateway | 320 ms | 434 ms |
+
+The Worker's own checks take about 0 ms. Nearly all of the difference is the round trip from Cloudflare's edge back
+to the host through the tunnel, so a host in a data centre near the Cloudflare location would cut most of it.
+
+```bash
+edge/scripts/run-origin.sh                     # kilnd, gateway with the secret check, quick tunnel; prints the URL
+cd edge && npm install
+npx wrangler deploy --var ORIGIN_URL:<tunnel URL>
+npx wrangler secret put ORIGIN_SECRET          # same value as ~/.config/kiln/edge-secret
+npx wrangler secret put API_KEY_HASHES         # comma-separated SHA-256 hex of the client keys
+gateway/.venv/bin/python edge/scripts/bench.py --edge https://kiln-edge.<you>.workers.dev
+```
+
+A quick tunnel gets a new URL each run, so the Worker is redeployed with it; a named tunnel on your own domain keeps
+one URL. `run-origin.sh` starts kilnd on port 7171 because 7070 is often taken on desktops (AnyDesk uses it).
+
 ## Deployment on GCP
 
 `deploy/terraform` stands up a pool of sandbox hosts on Compute Engine VMs with nested virtualization, so Firecracker has `/dev/kvm`.
