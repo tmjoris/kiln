@@ -1,0 +1,10 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "kiln-edge",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-11-01",
+	"observability": { "enabled": true },
+	// The tunnel URL is set at deploy time: wrangler deploy --var ORIGIN_URL:https://...
+	// Secrets (never in this file): wrangler secret put ORIGIN_SECRET / API_KEY_HASHES
+	"vars": { "ORIGIN_URL": "http://127.0.0.1:8080" }
+}
