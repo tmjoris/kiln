@@ -177,10 +177,10 @@ Sandboxes were started one at a time and kept alive, each having run the probe o
 
 Restored clones cost a sixth of a cold-booted VM by MemAvailable and an eleventh by PSS, because they share the snapshot's clean pages. MemAvailable is the only measure applied to all three paths. Summed PSS misses gVisor's guest memory file, so it is shown for Firecracker only. The laptop was running a desktop session, so MemAvailable readings below about 15 sandboxes are noise; the totals above are the stable figures.
 
-## Cloudflare front door (free plan)
+## Cloudflare front door
 
 `edge/` puts a Cloudflare Worker in front of the gateway, so clients reach Kiln at a public URL while the host
-accepts no inbound connections. It runs on the Workers free plan.
+accepts no inbound connections.
 
 ```
 client ── API key ──▶ Worker (kiln-edge.<you>.workers.dev) ── secret header ──▶ Cloudflare Tunnel ──▶ gateway ──▶ kilnd
@@ -213,7 +213,8 @@ npx wrangler secret put API_KEY_HASHES         # comma-separated SHA-256 hex of 
 gateway/.venv/bin/python edge/scripts/bench.py --edge https://kiln-edge.<you>.workers.dev
 ```
 
-A quick tunnel gets a new URL each run, so the Worker is redeployed with it; a named tunnel on your own domain keeps
+Everything here runs on Cloudflare's free tier. A quick tunnel gets a new URL each run, so the Worker is redeployed
+with it; a named tunnel on your own domain keeps
 one URL. `run-origin.sh` starts kilnd on port 7171 because 7070 is often taken on desktops (AnyDesk uses it).
 
 ## Deployment on GCP
