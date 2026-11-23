@@ -7,6 +7,7 @@ HTTP/JSON. Exec output can stream as server-sent events.
 """
 
 import base64
+import hmac
 import json
 import os
 import sys
@@ -48,6 +49,19 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="Kiln gateway", lifespan=lifespan)
+
+# When the gateway sits behind the Cloudflare Worker in edge/, only the Worker knows this secret,
+# so requests that reach the tunnel any other way are refused. Unset means local use: no check.
+EDGE_SECRET = os.environ.get("KILN_EDGE_SECRET", "")
+
+
+@app.middleware("http")
+async def require_edge_secret(request: Request, call_next):
+    if EDGE_SECRET and request.url.path != "/healthz":
+        given = request.headers.get("x-kiln-edge-secret", "")
+        if not hmac.compare_digest(given.encode(), EDGE_SECRET.encode()):
+            return JSONResponse({"detail": "forbidden"}, status_code=403)
+    return await call_next(request)
 
 
 @app.exception_handler(grpc.aio.AioRpcError)
