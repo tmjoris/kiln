@@ -1,0 +1,19 @@
+{
+  "when": "2026-11-23T06:17:11",
+  "direct": {
+    "create_ms": 22.8,
+    "n": 30,
+    "p50_ms": 135.2,
+    "p95_ms": 244.4,
+    "mean_ms": 140.3,
+    "server_timing_sample": null
+  },
+  "edge": {
+    "create_ms": 1473.2,
+    "n": 30,
+    "p50_ms": 320.3,
+    "p95_ms": 433.6,
+    "mean_ms": 327.8,
+    "server_timing_sample": "edge-auth;dur=0, origin;dur=299"
+  }
+}
